@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import qs from "qs";
 
 import { PizzaBlock } from "../components/PizzaBlock/PizzaBlock";
@@ -6,7 +6,6 @@ import Categories from "../components/Categories";
 import Sort, { sortList } from "../components/Sort";
 import Skeleton from "../components/PizzaBlock/Skeleton";
 import Pagination from "../components/Pagination";
-import { SearchContext } from "../App";
 
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
@@ -34,9 +33,7 @@ const Home = () => {
 
   const { items } = useSelector((state: any) => state.pizza.items);
 
-  const { searchValue } = useContext(SearchContext)!;
-
-  const { categoryId, sort, pageCount } = useSelector(
+  const { categoryId, sort, pageCount, searchValue } = useSelector(
     (state: RootState) => state.filter
   );
   const dispatch = useDispatch();
