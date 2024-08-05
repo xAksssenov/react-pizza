@@ -15,7 +15,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { setFilters } from "../redux/slices/filterSlice";
 
-type PizzaItem = {
+export type PizzaItem = {
   id: string;
   title: string;
   type: string;
