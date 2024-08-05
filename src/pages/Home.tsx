@@ -14,6 +14,7 @@ import { RootState } from "../redux/store";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { setFilters } from "../redux/slices/filterSlice";
+import { setItems } from "../redux/slices/pizzaSlice";
 
 export type PizzaItem = {
   id: string;
@@ -29,8 +30,9 @@ export type PizzaItem = {
 
 const Home = () => {
   const navigate = useNavigate();
-  const [items, setItems] = useState<PizzaItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const { items } = useSelector((state: any) => state.pizza.items);
 
   const { searchValue } = useContext(SearchContext)!;
 
@@ -55,7 +57,7 @@ const Home = () => {
           sort,
         })
       );
-      isSearch.current = true;
+      isMounted.current = true;
     }
   }, [dispatch]);
 
@@ -66,17 +68,10 @@ const Home = () => {
     const search = searchValue ? `&title=${searchValue}` : "";
 
     try {
-      const response = await axios.get(
+      const { data } = await axios.get(
         `https://f1bcf432b4787299.mokky.dev/pizza?page=${pageCount}&limit=4${category}&sortBy=${sort.sortProperty}${search}`
       );
-      const data = await response.data;
-
-      if (!response.data) {
-        throw new Error((data as any).message);
-      }
-
-      const items = Array.isArray(data) ? data : data.items;
-      setItems(items);
+      dispatch(setItems(data));
     } catch (error) {
       console.log("Ошибка подключения:", error);
     } finally {
@@ -107,7 +102,9 @@ const Home = () => {
     isMounted.current = true;
   }, [categoryId, sort.sortProperty, pageCount]);
 
-  const pizzas = items.map((obj: any) => <PizzaBlock key={obj.id} {...obj} />);
+  const pizzas = Array.isArray(items)
+    ? items.map((obj: any) => <PizzaBlock key={obj.id} {...obj} />)
+    : [];
   const skeletons = [...new Array(6)].map((_, index) => (
     <Skeleton key={index} />
   ));
