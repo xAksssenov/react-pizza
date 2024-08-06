@@ -2,10 +2,25 @@ import { Link, useLocation } from "react-router-dom";
 import Search from "./Search";
 import { useSelector } from "react-redux";
 import { selectCart } from "../redux/slices/cartSlice";
+import { useEffect, useRef } from "react";
 
 const Header = () => {
-  const { totalCount, totalPrice } = useSelector(selectCart);
+  const { items, totalCount, totalPrice } = useSelector(selectCart);
   const location = useLocation();
+  const isMounted = useRef(false);
+
+  useEffect(() => {
+    if (isMounted.current) {
+      const updateLocalStorage = (key: string, value: any) => {
+        localStorage.setItem(key, JSON.stringify(value));
+      };
+
+      updateLocalStorage("cart", items);
+      updateLocalStorage("price", totalPrice);
+      updateLocalStorage("count", totalCount);
+    }
+    isMounted.current = true;
+  }, [items, totalPrice, totalCount]);
 
   return (
     <>

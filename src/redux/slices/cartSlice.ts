@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { getCart, getCount, getPrice } from "../../utils/getData";
 
 export interface cartState {
   totalPrice: number;
@@ -7,9 +8,9 @@ export interface cartState {
 }
 
 const initialState: cartState = {
-  totalPrice: 0,
-  totalCount: 0,
-  items: [],
+  totalPrice: getPrice(),
+  totalCount: getCount(),
+  items: getCart(),
 };
 
 export const cartSlice = createSlice({
@@ -70,7 +71,7 @@ export const cartSlice = createSlice({
   },
 });
 
-export const selectCart = (state: any ) => state.cart;
+export const selectCart = (state: any) => state.cart;
 
 export const { addItem, minusItem, clearItem, removeItem } = cartSlice.actions;
 
